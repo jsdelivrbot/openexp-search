@@ -6,7 +6,7 @@ const ExperimentList = (props) => {
   const experimentItems = props.experiments.map((experiment) => {
     return <ExperimentListItem
       onExperimentSelect={props.onExperimentSelect}
-      key={experiment.sha}
+      key={experiment.html_url}
       experiment={experiment} />
   });
 

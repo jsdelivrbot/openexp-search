@@ -5,7 +5,8 @@ import GitHub from 'github-api';
 
 import SearchBar from './components/search_bar';
 import ExperimentList from './components/experiment_list';
-import ExperimentDetail from './components/experiment_detail'
+import ExperimentDetail from './components/experiment_detail';
+import Button from './components/launcher_button';
 
 var gh = new GitHub({token: API_KEY});
 
@@ -24,7 +25,7 @@ class App extends Component {
       selectedExperiment: null
     };
 
-    this.experimentSearch('stroop');
+    this.experimentSearch('reaction');
 
   }
 
@@ -32,10 +33,11 @@ class App extends Component {
     gh.search({q: `experiment.json in:path; ${term} in:file`,
                sort: 'stars',
                order: 'desc',}).forCode().then(experiments => {
-                //  console.log('experiments', experiments['data']);
+                 console.log('experiment', experiments['data'][0]);
                  this.setState({
                    experiments: experiments['data'].slice(0, 10),
                    selectedExperiment: experiments['data'][0]
+
                  });
                });
              };
@@ -47,6 +49,7 @@ class App extends Component {
       <div>
         <SearchBar onSearchTermChange={experimentSearch}/>
         <ExperimentDetail experiment={this.state.selectedExperiment} />
+        <Button />
         <ExperimentList
           onExperimentSelect={selectedExperiment => this.setState({selectedExperiment})}
           experiments={this.state.experiments} />
