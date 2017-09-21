@@ -1,15 +1,62 @@
-import React from 'react';
+import _ from 'lodash';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import GitHub from 'github-api';
 
-import App from './components/app';
-import reducers from './reducers';
+import SearchBar from './components/search_bar';
+import ExperimentList from './components/experiment_list';
+import ExperimentDetail from './components/experiment_detail'
 
-const createStoreWithMiddleware = applyMiddleware()(createStore);
+var gh = new GitHub({token: API_KEY});
 
-ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
-    <App />
-  </Provider>
-  , document.querySelector('.container'));
+// var Search = gh.search({q: `experiment.json in:path`,
+//                sort: 'stars',
+//                order: 'desc',}).forCode().then(test => {console.log('content', test) })
+// Create a new component. This component should produce some html
+
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      experiments : [],
+      selectedExperiment: null
+    };
+
+    this.experimentSearch('stroop');
+
+  }
+
+  experimentSearch(term) {
+    gh.search({q: `experiment.json in:path; ${term} in:file`,
+               sort: 'stars',
+               order: 'desc',}).forCode().then(experiments => {
+                //  console.log('experiments', experiments['data']);
+                 this.setState({
+                   experiments: experiments['data'].slice(0, 10),
+                   selectedExperiment: experiments['data'][0]
+                 });
+               });
+             };
+
+  render() {
+    const experimentSearch = _.debounce((term) => { this.experimentSearch(term) }, 2000);
+
+    return (
+      <div>
+        <SearchBar onSearchTermChange={experimentSearch}/>
+        <ExperimentDetail experiment={this.state.selectedExperiment} />
+        <ExperimentList
+          onExperimentSelect={selectedExperiment => this.setState({selectedExperiment})}
+          experiments={this.state.experiments} />
+      </div>
+    );
+
+  }
+
+
+}
+
+// Take this component's generated HTML and put it on the page (in the DOM)
+ReactDOM.render(<App />, document.querySelector('.container'));
