@@ -12,7 +12,7 @@ const ExperimentListItem = ({experiment, onExperimentSelect}) => {
       </div>
 
       <div className="media-body">
-        <div className="media-heading">{experiment.repository.full_name}</div>
+        <div className="media-heading">{experiment.full_name}</div>
       </div>
     </li>
   )

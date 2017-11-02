@@ -8,12 +8,9 @@ import ExperimentList from './components/experiment_list';
 import ExperimentDetail from './components/experiment_detail';
 import Button from './components/launcher_button';
 
+const API_KEY = '8ee23e14f1db6066aa6e766b3ba3c91600a83c04'
 var gh = new GitHub({token: API_KEY});
 
-// var Search = gh.search({q: `experiment.json in:path`,
-//                sort: 'stars',
-//                order: 'desc',}).forCode().then(test => {console.log('content', test) })
-// Create a new component. This component should produce some html
 
 class App extends Component {
 
@@ -30,14 +27,12 @@ class App extends Component {
   }
 
   experimentSearch(term) {
-    gh.search({q: `experiment.json in:path; ${term} in:file`,
+    gh.search({q: `topic:exprxiv`,
                sort: 'stars',
-               order: 'desc',}).forCode().then(experiments => {
-                 console.log('experiment', experiments['data'][0]);
+               order: 'desc',}).forRepositories().then(experiments => {
                  this.setState({
                    experiments: experiments['data'].slice(0, 10),
                    selectedExperiment: experiments['data'][0]
-
                  });
                });
              };
@@ -48,8 +43,8 @@ class App extends Component {
     return (
       <div>
         <SearchBar onSearchTermChange={experimentSearch}/>
-        <ExperimentDetail experiment={this.state.selectedExperiment} />
         <Button />
+        <ExperimentDetail experiment={this.state.selectedExperiment} />
         <ExperimentList
           onExperimentSelect={selectedExperiment => this.setState({selectedExperiment})}
           experiments={this.state.experiments} />
