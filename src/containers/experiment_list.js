@@ -4,7 +4,7 @@ import retrieveJSON from '../actions/fetch';
 
 class ExperimentList extends Component {
   renderExperiment(experiment) {
-
+    console.log('experiment', experiment);
     const name = experiment.name;
     const description = experiment.description;
     const url = experiment.html_url;
@@ -14,7 +14,7 @@ class ExperimentList extends Component {
       <tr key={id}>
         <td>{name}</td>
         <td>{description}</td>
-        <td><a href={experiment.html_url}>GitHub</a></td>
+        <td><a href={url}>GitHub</a></td>
       </tr>
     )
   }
@@ -38,9 +38,9 @@ class ExperimentList extends Component {
 }
 
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ retrieveJSON }, dispatch);
-}
+// function mapDispatchToProps(dispatch) {
+//   return bindActionCreators({ retrieveJSON }, dispatch);
+// }
 
 function mapStateToProps({ experiment }) { // { weather } === state.weather
   return { experiment }; // { weather } === { weather: weather }

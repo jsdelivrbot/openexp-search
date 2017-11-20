@@ -4,7 +4,7 @@ import constants from './constants';
 
 
 export default function retrieveJSON(url) {
-  request = fetch(url);
+  const request = fetch(url);
 
   return {
     type: constants.RETRIEVE_JSON,
